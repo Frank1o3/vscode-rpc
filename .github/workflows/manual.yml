@@ -1,0 +1,73 @@
+name: Build and Release Vscode RPC
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Compile TypeScript
+      - name: Compile extension
+        run: npm run compile
+
+      # Package extension with vsce
+      - name: Package extension
+        run: |
+          npm install -g @vscode/vsce
+          vsce package
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Extract version from package.json
+      - name: Get version
+        id: get_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
+      # Extract changelog for the current version
+      - name: Extract changelog
+        id: changelog
+        run: |
+          CHANGELOG=$(awk '/## \['${{ env.VERSION }}'\]/{flag=1;next}/## \[/&&flag{flag=0}flag' CHANGELOG.md | sed 's/"/\\"/g' | tr '\n' '\r' | sed 's/\r/\\n/g')
+          echo "CHANGELOG=$CHANGELOG" >> $GITHUB_ENV
+
+      # Create GitHub Release
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.VERSION }}
+          release_name: Vscode RPC v${{ env.VERSION }}
+          body: ${{ env.CHANGELOG }}
+          draft: false
+          prerelease: false
+
+      # Upload .vsix as release asset
+      - name: Upload .vsix to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./vscode-rpc-${{ env.VERSION }}.vsix
+          asset_name: vscode-rpc-${{ env.VERSION }}.vsix
+          asset_content_type: application/vsix
