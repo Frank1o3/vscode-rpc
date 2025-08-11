@@ -4,6 +4,7 @@
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
   "version": "0.1.4",
   "publisher": "Frank1o3",
+  "keywords": ["vscode", "discord", "rpc", "presence", "coding", "developer status"],
   "author": {
     "name": "Frank1o3",
     "email": "jahdy1o3@gamil.com"
