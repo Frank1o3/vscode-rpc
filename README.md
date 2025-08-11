@@ -1,6 +1,6 @@
 # Vscode RPC
 
-A Visual Studio Code extension that displays your coding activity in Discord using Rich Presence, showing the file you're editing, the programming language, and your workspace.
+Show your VS Code activity on Discord — language, workspace, and more in real time.
 
 ## Features
 
