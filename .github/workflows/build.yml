@@ -49,6 +49,21 @@ jobs:
         id: pkg
         run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
 
+      - name: Get latest release version
+        id: latest
+        run: |
+          latest_version=$(gh release list --limit 1 --json tagName --jq '.[0].tagName' || echo "")
+          echo "latest=$latest_version" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+
+      - name: Check if version changed
+        run: |
+          if [ "${{ steps.pkg.outputs.version }}" = "${{ steps.latest.outputs.latest }}" ]; then
+            echo "Version unchanged (${steps.pkg.outputs.version}), skipping release."
+            exit 0
+          fi
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
@@ -63,4 +78,4 @@ jobs:
           files: "*.vsix"
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }} # Use GH_PAT if default token fails
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
