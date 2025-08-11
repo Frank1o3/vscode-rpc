@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allow manual trigger too
+  workflow_dispatch:
 
 jobs:
   build:
@@ -42,22 +42,25 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read version from package.json
+        id: pkg
+        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: vscode-extension
 
-      - name: Get current date
-        id: date
-        run: echo "date=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "Auto Build ${{ steps.date.outputs.date }}"
-          tag_name: "auto-${{ steps.date.outputs.date }}"
-          body: "Automatic build from latest main commit."
+          name: "v${{ steps.pkg.outputs.version }}"
+          tag_name: "v${{ steps.pkg.outputs.version }}"
+          body: "Automatic build of version v${{ steps.pkg.outputs.version }} from main branch."
           files: "*.vsix"
-          prerelease: true
+          prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }} # Use GH_PAT if default token fails
