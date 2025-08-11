@@ -2,9 +2,9 @@ name: Build & Release VSCode Extension
 
 on:
   push:
-    tags:
-      - "v*" # Trigger only when pushing version tags like v0.1.4
-  workflow_dispatch: # Allow manual trigger
+    branches:
+      - main
+  workflow_dispatch: # Allow manual trigger too
 
 jobs:
   build:
@@ -31,7 +31,6 @@ jobs:
 
       - name: Package extension
         run: vsce package --no-dependencies
-        # This will produce something like vscode-rpc-0.1.4.vsix
 
       - name: Upload VSIX as Artifact
         uses: actions/upload-artifact@v4
@@ -48,9 +47,17 @@ jobs:
         with:
           name: vscode-extension
 
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          name: "Auto Build ${{ steps.date.outputs.date }}"
+          tag_name: "auto-${{ steps.date.outputs.date }}"
+          body: "Automatic build from latest main commit."
           files: "*.vsix"
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
