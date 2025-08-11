@@ -1,0 +1,40 @@
+{
+  "name": "vscode-rpc",
+  "displayName": "Vscode RPC",
+  "description": "Discord RPC so other know if you are coding and what language it is. :D",
+  "version": "1.0.0",
+  "publisher": "Frank1o3",
+  "author": {
+    "name": "Frank1o3",
+    "email": "jahdy1o3@gamil.com"
+  },
+  "engines": {
+    "vscode": "^1.103.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/discord-rpc": "^4.0.9",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.102.0",
+    "@typescript-eslint/eslint-plugin": "^8.39.0",
+    "@typescript-eslint/parser": "^8.39.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "discord-rpc": "^4.0.1",
+    "eslint": "^9.32.0",
+    "typescript": "^5.9.2"
+  }
+}
