@@ -2,14 +2,14 @@
   "name": "vscode-rpc",
   "displayName": "Vscode RPC",
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "publisher": "Frank1o3",
   "author": {
     "name": "Frank1o3",
     "email": "jahdy1o3@gamil.com"
   },
   "engines": {
-    "vscode": "^1.103.0"
+    "vscode": "^1.102.3"
   },
   "categories": [
     "Other"
@@ -39,5 +39,32 @@
     "discord-rpc": "^4.0.1",
     "eslint": "^9.32.0",
     "typescript": "^5.9.2"
+  },
+  "contributes": {
+    "configuration": {
+      "title": "Discord Presence (Simple)",
+      "properties": {
+        "discordPresence.clientId": {
+          "type": "string",
+          "default": "",
+          "description": "Discord Application Client ID"
+        },
+        "discordPresence.largeImageKey": {
+          "type": "string",
+          "default": "coding",
+          "description": "Discord asset key for large image (upload one image with this key)."
+        },
+        "discordPresence.smallImageKey": {
+          "type": "string",
+          "default": "vscode",
+          "description": "Discord asset key for small image (upload small image with this key)."
+        },
+        "discordPresence.showWorkspace": {
+          "type": "boolean",
+          "default": true,
+          "description": "Append workspace folder name to presence details."
+        }
+      }
+    }
   }
 }
