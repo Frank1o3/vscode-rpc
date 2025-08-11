@@ -1,27 +1,58 @@
-# Welcome to your VS Code Extension
+# Vscode RPC
 
-## What's in the folder
+A Visual Studio Code extension that displays your coding activity in Discord using Rich Presence, showing the file you're editing, the programming language, and your workspace.
 
-* This folder contains all of the files necessary for your extension.
-* `package.json` - this is the manifest file in which you declare your extension and command.
-  * The sample plugin registers a command and defines its title and command name. With this information VS Code can show the command in the command palette. It doesn’t yet need to load the plugin.
-* `src/extension.ts` - this is the main file where you will provide the implementation of your command.
-  * The file exports one function, `activate`, which is called the very first time your extension is activated (in this case by executing the command). Inside the `activate` function we call `registerCommand`.
-  * We pass the function containing the implementation of the command as the second parameter to `registerCommand`.
+## Features
 
-## Make changes
+- Displays your current file and programming language in Discord.
+- Customizable large and small images for Rich Presence.
+- Shows workspace name (optional).
+- Supports `ipc` and `websocket` transports for compatibility.
+- Includes a "View on GitHub" button linking to [https://github.com/Frank1o3/vscode-rpc](https://github.com/Frank1o3/vscode-rpc).
 
-* You can relaunch the extension from the debug toolbar after changing code in `src/extension.ts`.
-* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
+## Requirements
 
-## Explore the API
+- A Discord Application with a valid `clientId` (create one at [Discord Developer Portal](https://discord.com/developers/applications)).
+- Discord desktop app running with "Display current activity as a status message" enabled in **Settings > Activity Privacy**.
 
-* You can open the full set of our API when you open the file `node_modules/@types/vscode/index.d.ts`.
+## Installation
 
-## Go further
+1. Download the `.vsix` file from [GitHub Releases](https://github.com/Frank1o3/vscode-rpc/releases).
+2. Install in VS Code: `code --install-extension vscode-rpc-<version>.vsix` (e.g., `vscode-rpc-0.1.4.vsix`).
+3. Create a Discord Application at [https://discord.com/developers/applications](https://discord.com/developers/applications).
+4. Copy the **Application ID** from **General Information**.
+5. In VS Code, go to **Settings > Extensions > Discord Presence** and set `discordPresence.clientId` to your Application ID.
+6. (Optional) Upload 512x512 PNG/JPG images to **Rich Presence > Assets** in the Discord Developer Portal for custom icons (e.g., `python`, `javascript`, `vscode`).
+7. Configure custom image keys in **Settings > Extensions > Discord Presence** (e.g., `{ "python": "custom_python_icon" }`).
 
-* [Follow UX guidelines](https://code.visualstudio.com/api/ux-guidelines/overview) to create extensions that seamlessly integrate with VS Code's native interface and patterns.
-* Reduce the extension size and improve the startup time by [bundling your extension](https://code.visualstudio.com/api/working-with-extensions/bundling-extension).
-* [Publish your extension](https://code.visualstudio.com/api/working-with-extensions/publishing-extension) on the VS Code extension marketplace.
-* Automate builds by setting up [Continuous Integration](https://code.visualstudio.com/api/working-with-extensions/continuous-integration).
-* Integrate to the [report issue](https://code.visualstudio.com/api/get-started/wrapping-up#issue-reporting) flow to get issue and feature requests reported by users.
+## Extension Settings
+
+- `discordPresence.clientId`: Your Discord Application ID.
+- `discordPresence.showWorkspace`: Show workspace name in Discord presence (default: `true`).
+- `discordPresence.transport`: Transport method (`ipc` or `websocket`, use `websocket` for Snap or remote environments).
+- `discordPresence.debounceMs`: Debounce time (ms) for presence updates (default: `1000`).
+- `discordPresence.customImageKeys`: Custom image keys for languages (e.g., `{ "python": "custom_python_icon" }`).
+- `discordPresence.defaultSmallImageKey`: Default small image key (default: `vscode`).
+
+## Example
+
+Editing a Python file (`test.py`) in a workspace named `MyProject`:
+
+- **Details**: `Editing test.py — MyProject`
+- **State**: `Language: Python | OS: Linux`
+- **Large Image**: Custom Python icon (e.g., `custom_python_icon`)
+- **Small Image**: VS Code icon (e.g., `vscode`)
+- **Button**: `View on GitHub`
+
+## Known Issues
+
+- On Linux with Snap-installed VS Code or Discord, use `websocket` transport to avoid IPC issues.
+- Ensure Discord assets are uploaded and cached (wait 5-10 minutes after uploading).
+
+## Contributing
+
+File issues or contribute at [https://github.com/Frank1o3/vscode-rpc](https://github.com/Frank1o3/vscode-rpc).
+
+## License
+
+MIT License
