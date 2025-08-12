@@ -16,7 +16,9 @@ const languageMap: Record<string, string> = {
     csharp: 'C#',
     lua: 'Lua',
     html: 'Html',
-    css: 'Css'
+    json: 'Json',
+    css: 'Css',
+    react: 'React'
 };
 
 const languageImageKeys: Record<string, string> = {
@@ -29,7 +31,9 @@ const languageImageKeys: Record<string, string> = {
     csharp: 'csharp',
     lua: 'lua',
     html: 'html',
-    css: 'css'
+    json: 'json',
+    css: 'css',
+    react: 'react'
 };
 
 function getOSName(): string {

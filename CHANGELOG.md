@@ -2,7 +2,14 @@
 
 All notable changes to the Vscode RPC extension will be documented in this file.
 
-## [0.1.4] - 2025-08-11
+## [0.1.5]
+## Added
+- More support for coding languages
+
+### Fixed
+- Resolved the issues with the clientSecret var
+
+## [0.1.4]
 ### Added
 - Customizable large and small images via `discordPresence.customImageKeys` and `discordPresence.defaultSmallImageKey`.
 - GitHub button in Discord presence linking to repository.
