@@ -23,7 +23,6 @@ Show your VS Code activity on Discord — language, workspace, and more in real 
 4. Copy the **Application ID** from **General Information**.
 5. In VS Code, go to **Settings > Extensions > Discord Presence** and set `discordPresence.clientId` to your Application ID.
 6. (Optional) Upload 512x512 PNG/JPG images to **Rich Presence > Assets** in the Discord Developer Portal for custom icons (e.g., `python`, `javascript`, `vscode`).
-7. Configure custom image keys in **Settings > Extensions > Discord Presence** (e.g., `{ "python": "custom_python_icon" }`).
 
 ## Extension Settings
 
