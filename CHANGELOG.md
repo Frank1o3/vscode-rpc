@@ -2,6 +2,11 @@
 
 All notable changes to the Vscode RPC extension will be documented in this file.
 
+## [0.1.6]
+## Added
+- More support for coding languages
+- Made a bot for the RPC so the clientId will be set by default.
+
 ## [0.1.5]
 ## Added
 - More support for coding languages
