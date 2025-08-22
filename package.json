@@ -2,7 +2,7 @@
   "name": "vscode-rpc",
   "displayName": "Vscode RPC",
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "publisher": "Frank1o3",
   "keywords": ["vscode", "discord", "rpc", "presence", "coding", "developer status"],
   "author": {
@@ -48,7 +48,7 @@
       "properties": {
         "discordPresence.clientId": {
           "type": "string",
-          "default": "",
+          "default": "1091455867716649033",
           "description": "Discord Application Client ID"
         },
         "discordPresence.ClientSecret": {

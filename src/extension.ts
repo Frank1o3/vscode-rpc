@@ -18,7 +18,12 @@ const languageMap: Record<string, string> = {
     html: 'Html',
     json: 'Json',
     css: 'Css',
-    react: 'React'
+    react: 'React',
+    txt:'Text',
+    yaml:"YAML",
+    yml:"YAML",
+    ruby: 'Ruby',
+    xml: 'XML'
 };
 
 const languageImageKeys: Record<string, string> = {
@@ -33,7 +38,12 @@ const languageImageKeys: Record<string, string> = {
     html: 'html',
     json: 'json',
     css: 'css',
-    react: 'react'
+    react: 'react',
+    txt:'txt',
+    yaml:"yaml",
+    yml:"yaml",
+    ruby: 'ruby',
+    xml: 'xml'
 };
 
 function getOSName(): string {
