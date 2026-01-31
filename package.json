@@ -59,6 +59,11 @@
           "default": "1091455867716649033",
           "description": "Discord Application Client ID"
         },
+        "discordPresence.ClientSecret": {
+          "type": "string",
+          "default": "",
+          "description": "ClientSecret optional to se btw"
+        },
         "discordPresence.showWorkspace": {
           "type": "boolean",
           "default": true,
