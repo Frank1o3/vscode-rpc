@@ -2,7 +2,7 @@
   "name": "vscode-rpc",
   "displayName": "Vscode RPC",
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "publisher": "Frank1o3",
   "keywords": [
     "vscode",
