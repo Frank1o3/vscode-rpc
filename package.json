@@ -2,7 +2,7 @@
   "name": "vscode-rpc",
   "displayName": "Vscode RPC",
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "publisher": "Frank1o3",
   "keywords": [
     "vscode",
@@ -72,8 +72,8 @@
         "discordPresence.transport": {
           "type": "string",
           "enum": [
-            "ipc",
-            "websocket"
+            "websocket",
+            "ipc"
           ],
           "default": "ipc",
           "description": "Transport method for Discord RPC (use 'websocket' for remote environments)"

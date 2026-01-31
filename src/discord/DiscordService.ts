@@ -123,6 +123,19 @@ export class DiscordService {
         }
     }
 
+    async clearActivity(): Promise<void> {
+        if (!this.rpc || !this.connected) {
+            return;
+        }
+
+        try {
+            await this.rpc.clearActivity();
+            console.log('Discord RPC activity cleared');
+        } catch (err) {
+            console.error('Discord RPC clearActivity failed:', err);
+        }
+    }
+
     disconnect(): void {
         if (this.rpc) {
             try {
