@@ -8,6 +8,8 @@ export interface DiscordConfig {
     transport: TransportType;
 }
 
+type ConnectionCallback = (connected: boolean, error?: Error) => void;
+
 export class DiscordService {
     private static instance: DiscordService;
 
@@ -15,6 +17,7 @@ export class DiscordService {
     private connected = false;
     private config: DiscordConfig | null = null;
     private connecting: Promise<void> | null = null;
+    private connectionCallbacks: ConnectionCallback[] = [];
 
     private constructor() { }
 
@@ -23,6 +26,14 @@ export class DiscordService {
             DiscordService.instance = new DiscordService();
         }
         return DiscordService.instance;
+    }
+
+    onConnectionChange(callback: ConnectionCallback): void {
+        this.connectionCallbacks.push(callback);
+    }
+
+    private notifyConnectionChange(connected: boolean, error?: Error): void {
+        this.connectionCallbacks.forEach(cb => cb(connected, error));
     }
 
     updateConfig(config: DiscordConfig): void {
@@ -40,6 +51,8 @@ export class DiscordService {
 
     private async connect(): Promise<void> {
         if (!this.config || !this.config.clientId) {
+            const error = new Error('No client ID configured');
+            this.notifyConnectionChange(false, error);
             return;
         }
 
@@ -58,6 +71,11 @@ export class DiscordService {
                 this.rpc.on('disconnected', () => {
                     this.connected = false;
                     this.rpc = null;
+                    this.notifyConnectionChange(false);
+                });
+
+                this.rpc.on('ready', () => {
+                    console.log('Discord RPC ready');
                 });
 
                 await this.rpc.login({
@@ -66,10 +84,13 @@ export class DiscordService {
                 });
 
                 this.connected = true;
+                this.notifyConnectionChange(true);
             } catch (err) {
                 this.rpc = null;
                 this.connected = false;
-                console.error('Discord RPC connection failed:', err);
+                const error = err instanceof Error ? err : new Error(String(err));
+                console.error('Discord RPC connection failed:', error);
+                this.notifyConnectionChange(false, error);
             } finally {
                 this.connecting = null;
             }
@@ -97,6 +118,8 @@ export class DiscordService {
             console.error('Discord RPC setActivity failed:', err);
             this.connected = false;
             this.rpc = null;
+            const error = err instanceof Error ? err : new Error(String(err));
+            this.notifyConnectionChange(false, error);
         }
     }
 

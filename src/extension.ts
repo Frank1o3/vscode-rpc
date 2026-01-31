@@ -99,6 +99,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         transport: conf.get<'ipc' | 'websocket'>('transport', 'ipc')
     });
 
+    // Set up connection status listener
+    discord.onConnectionChange((connected, error) => {
+        if (connected) {
+            vscode.window.showInformationMessage('Discord RPC: Connected successfully! 🎉');
+        } else if (error) {
+            vscode.window.showErrorMessage(`Discord RPC: Failed to connect - ${error.message}`);
+        }
+    });
+
     context.subscriptions.push(
         vscode.window.onDidChangeActiveTextEditor(updatePresenceDebounced),
         vscode.workspace.onDidChangeTextDocument(updatePresenceDebounced),
@@ -113,10 +122,21 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                 });
                 updatePresenceDebounced();
             }
+        }),
+        // Add command to manually reconnect
+        vscode.commands.registerCommand('discordPresence.reconnect', async () => {
+            discord.disconnect();
+            vscode.window.showInformationMessage('Discord RPC: Reconnecting...');
+            await updatePresence();
         })
     );
 
-    updatePresenceDebounced();
+    // Initial connection attempt
+    try {
+        await updatePresence();
+    } catch (error) {
+        console.error('Initial presence update failed:', error);
+    }
 }
 
 export function deactivate(): void {
