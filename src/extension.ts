@@ -81,7 +81,7 @@ async function updatePresence(): Promise<void> {
         : 'untitled';
 
     const currentFile = editor.document.uri.toString();
-    
+
     // Reset timestamp when switching to a different file
     if (lastFile !== currentFile) {
         startTimestamp = Date.now();
@@ -102,7 +102,7 @@ async function updatePresence(): Promise<void> {
         startTimestamp,
         largeImageKey: 'vscode',
         largeImageText: 'Visual Studio Code',
-        smallImageKey: langId,
+        smallImageKey: langId.toLocaleLowerCase(),
         smallImageText: language
     });
 }
