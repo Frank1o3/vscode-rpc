@@ -33,7 +33,9 @@ const languageMap: Record<string, string> = {
     markdown: 'Markdown',
     sql: 'SQL',
     shellscript: 'Shell',
-    powershell: 'PowerShell'
+    powershell: 'PowerShell',
+    toml: "Toml",
+    ini: "Ini"
 };
 
 function getOSName(): string {
