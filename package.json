@@ -2,9 +2,16 @@
   "name": "vscode-rpc",
   "displayName": "Vscode RPC",
   "description": "Discord RPC so other know if you are coding and what language it is. :D",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "publisher": "Frank1o3",
-  "keywords": ["vscode", "discord", "rpc", "presence", "coding", "developer status"],
+  "keywords": [
+    "vscode",
+    "discord",
+    "rpc",
+    "presence",
+    "coding",
+    "developer status"
+  ],
   "author": {
     "name": "Frank1o3",
     "email": "jahdy1o3@gamil.com"
@@ -51,11 +58,6 @@
           "default": "1091455867716649033",
           "description": "Discord Application Client ID"
         },
-        "discordPresence.ClientSecret": {
-          "type": "string",
-          "default": "",
-          "description": "ClientSecret optional to se btw"
-        },
         "discordPresence.showWorkspace": {
           "type": "boolean",
           "default": true,
@@ -73,6 +75,7 @@
         "discordPresence.debounceMs": {
           "type": "number",
           "default": 1000,
+          "minimum": 250,
           "description": "Debounce time (ms) for presence updates"
         }
       }
