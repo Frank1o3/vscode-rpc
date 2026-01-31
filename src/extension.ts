@@ -4,6 +4,7 @@ import { DiscordService } from './discord/DiscordService';
 
 let startTimestamp = Date.now();
 let updateTimer: NodeJS.Timeout | null = null;
+let lastFile: string | undefined = undefined;
 
 const discord = DiscordService.getInstance();
 
@@ -24,7 +25,14 @@ const languageMap: Record<string, string> = {
     yaml: 'YAML',
     yml: 'YAML',
     ruby: 'Ruby',
-    xml: 'XML'
+    xml: 'XML',
+    go: 'Go',
+    rust: 'Rust',
+    php: 'PHP',
+    markdown: 'Markdown',
+    sql: 'SQL',
+    shellscript: 'Shell',
+    powershell: 'PowerShell'
 };
 
 function getOSName(): string {
@@ -36,13 +44,13 @@ function getOSName(): string {
     }
 }
 
-function updatePresenceDebounced(): void {
+function updatePresenceDebounced(immediate: boolean = false): void {
     if (updateTimer) {
         clearTimeout(updateTimer);
     }
 
     const conf = vscode.workspace.getConfiguration('discordPresence');
-    const debounceMs = conf.get<number>('debounceMs', 1000);
+    const debounceMs = immediate ? 0 : conf.get<number>('debounceMs', 1000);
 
     updateTimer = setTimeout(() => {
         updatePresence();
@@ -61,6 +69,7 @@ async function updatePresence(): Promise<void> {
             largeImageKey: 'vscode',
             largeImageText: 'Visual Studio Code'
         });
+        lastFile = undefined;
         return;
     }
 
@@ -70,6 +79,14 @@ async function updatePresence(): Promise<void> {
     const fileName = editor.document.uri.scheme === 'file'
         ? vscode.workspace.asRelativePath(editor.document.uri).split('/').pop()
         : 'untitled';
+
+    const currentFile = editor.document.uri.toString();
+    
+    // Reset timestamp when switching to a different file
+    if (lastFile !== currentFile) {
+        startTimestamp = Date.now();
+        lastFile = currentFile;
+    }
 
     const conf = vscode.workspace.getConfiguration('discordPresence');
     const showWorkspace = conf.get<boolean>('showWorkspace', true);
@@ -109,9 +126,11 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     });
 
     context.subscriptions.push(
-        vscode.window.onDidChangeActiveTextEditor(updatePresenceDebounced),
-        vscode.workspace.onDidChangeTextDocument(updatePresenceDebounced),
-        vscode.workspace.onDidChangeWorkspaceFolders(updatePresenceDebounced),
+        // Update immediately when changing active editor (switching files/tabs)
+        vscode.window.onDidChangeActiveTextEditor(() => updatePresenceDebounced(true)),
+        // Debounce updates when typing in the same document
+        vscode.workspace.onDidChangeTextDocument(() => updatePresenceDebounced(false)),
+        vscode.workspace.onDidChangeWorkspaceFolders(() => updatePresenceDebounced(true)),
         vscode.workspace.onDidChangeConfiguration(e => {
             if (e.affectsConfiguration('discordPresence')) {
                 const conf = vscode.workspace.getConfiguration('discordPresence');
@@ -120,13 +139,15 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
                     clientSecret: conf.get<string>('clientSecret', ''),
                     transport: conf.get<'ipc' | 'websocket'>('transport', 'ipc')
                 });
-                updatePresenceDebounced();
+                updatePresenceDebounced(true);
             }
         }),
         // Add command to manually reconnect
         vscode.commands.registerCommand('discordPresence.reconnect', async () => {
             discord.disconnect();
             vscode.window.showInformationMessage('Discord RPC: Reconnecting...');
+            lastFile = undefined;
+            startTimestamp = Date.now();
             await updatePresence();
         })
     );
